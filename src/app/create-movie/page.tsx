@@ -10,7 +10,9 @@ export default function CreateMovie() {
 
   const handleFileSelection = (selectedFile: File | null): void => {
     setFile(selectedFile)
-  };
+  }
+
+  console.log(file)
 
   return (
     <div className="min-h-screen flex flex-col py-8 pb-20 gap-32 sm:p-20">

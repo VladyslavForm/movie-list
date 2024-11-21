@@ -3,7 +3,7 @@ import { MdClear } from "react-icons/md"
 import Image from "next/image"
 
 interface DragNdropProps {
-  onFilesSelected: (file: File | null) => (value: (((prevState: any[]) => any[]) | any[])) => void
+  onFilesSelected: (file: File | null) => void
   width?: string | number
   height?: string | number
 }
