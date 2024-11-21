@@ -1,111 +1,113 @@
 'use server'
 
-// import {z} from 'zod';
-// import {sql} from '@vercel/postgres'
-// import {revalidatePath} from 'next/cache'
-// import {redirect} from 'next/navigation'
-import {signIn} from '@/auth'
-import {AuthError} from 'next-auth'
+import { z } from 'zod';
+import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 
-// const FormSchema = z.object({
-//   id: z.string(),
-//   customerId: z.string({
-//     invalid_type_error: 'Please select a customer.',
-//   }),
-//   amount: z.coerce
-//     .number()
-//     .gt(0, { message: 'Please enter an amount greater than $0.' }),
-//   status: z.enum(['pending', 'paid'], {
-//     invalid_type_error: 'Please select an invoice status.',
-//   }),
-//   date: z.string(),
-// });
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../../firebase';
 
-// const CreateInvoice = FormSchema.omit({ id: true, date: true });
-// const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+export async function uploadImageToFirebase(file) {
+  const storageRef = ref(storage, `movies/${file.name}`);
+  await uploadBytes(storageRef, file); // Upload the file
+  const url = await getDownloadURL(storageRef); // Get the download URL
+  return url;
+}
 
-// export type State = {
-//   errors?: {
-//     customerId?: string[];
-//     amount?: string[];
-//     status?: string[];
-//   };
-//   message?: string | null;
-// };
+const FormSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, { message: 'Please enter a movie title.' }),
+  release_year: z.coerce
+    .number()
+    .gte(1900, { message: 'Release year must be 1900 or later.' }),
+  image: z.string().url({ message: 'Please provide a valid image URL.' }),
+});
 
-// export async function createInvoice(prevState: State, formData: FormData) {
-//   const validatedFields = CreateInvoice.safeParse({
-//     customerId: formData.get('customerId'),
-//     amount: formData.get('amount'),
-//     status: formData.get('status'),
-//   });
-//
-//   if (!validatedFields.success) {
-//     return {
-//       errors: validatedFields.error.flatten().fieldErrors,
-//       message: 'Missing Fields. Failed to Create Invoice.',
-//     };
-//   }
-//
-//   const { customerId, amount, status } = validatedFields.data;
-//   const amountInCents = amount * 100;
-//   const date = new Date().toISOString().split('T')[0];
-//
-//   try {
-//     await sql`
-//       INSERT INTO invoices (customer_id, amount, status, date)
-//       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-//     `;
-//   } catch (error) {
-//     return {
-//       message: `Database Error: Failed to Create Invoice. ${error}`,
-//     };
-//   }
-//
-//   revalidatePath('/dashboard/invoices');
-//   redirect('/dashboard/invoices');
-// }
+const CreateMovie = FormSchema.omit({ id: true });
+const UpdateMovie = FormSchema.omit({ id: true });
 
-// export async function updateInvoice(id: string, prevState: State, formData: FormData) {
-//   const validatedFields = UpdateInvoice.safeParse({
-//     customerId: formData.get('customerId'),
-//     amount: formData.get('amount'),
-//     status: formData.get('status'),
-//   });
-//
-//   if (!validatedFields.success) {
-//     return {
-//       errors: validatedFields.error.flatten().fieldErrors,
-//       message: 'Missing Fields. Failed to Create Invoice.',
-//     };
-//   }
-//
-//   const {amount, customerId, status} = validatedFields.data
-//   const amountInCents = amount * 100;
-//
-//   try {
-//     await sql`
-//         UPDATE invoices
-//         SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-//         WHERE id = ${id}
-//       `;
-//   } catch (error) {
-//     return { message: `Database Error: Failed to Update Invoice. ${error}` };
-//   }
-//
-//   revalidatePath('/dashboard/invoices');
-//   redirect('/dashboard/invoices');
-// }
+export type State = {
+  errors?: {
+    title?: string[];
+    release_year?: string[];
+    image?: string[];
+  };
+  message?: string | null;
+};
 
-// export async function deleteInvoice(id: string) {
-//   try {
-//     await sql`DELETE FROM invoices WHERE id = ${id}`;
-//     revalidatePath('/dashboard/invoices');
-//     return { message: 'Deleted Invoice.' };
-//   } catch (error) {
-//     return { message: `Database Error: Failed to Delete Invoice., ${error}` };
-//   }
-// }
+export async function createMovie(prevState: State, formData: FormData) {
+  const validatedFields = CreateMovie.safeParse({
+    title: formData.get('title'),
+    release_year: formData.get('release_year'),
+    image: formData.get('image'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Movie.',
+    };
+  }
+
+  const { title, release_year, image } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO movies (title, release_year, image)
+      VALUES (${title}, ${release_year}, ${image})
+    `;
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Create Movie.',
+    };
+  }
+
+  revalidatePath('/');
+  redirect('/');
+}
+
+export async function updateMovie(id: string, prevState: State, formData: FormData) {
+  const validatedFields = UpdateMovie.safeParse({
+    title: formData.get('title'),
+    release_year: formData.get('release_year'),
+    image: formData.get('image'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Movie.',
+    };
+  }
+
+  const { title, release_year, image } = validatedFields.data;
+
+  try {
+    await sql`
+      UPDATE movies
+      SET title = ${title}, release_year = ${release_year}, image = ${image}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Movie.' };
+  }
+
+  revalidatePath('/dashboard/movies');
+  redirect('/dashboard/movies');
+}
+
+export async function deleteMovie(id: string) {
+  try {
+    await sql`DELETE FROM movies WHERE id = ${id}`;
+    revalidatePath('/');
+    return { message: 'Deleted Movie.' };
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Movie.' };
+  }
+}
 
 export async function authenticate(
   prevState: string | undefined,
