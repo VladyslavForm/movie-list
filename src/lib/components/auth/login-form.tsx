@@ -1,13 +1,13 @@
 'use client'
-import {useFormStatus} from 'react-dom'
+import React from 'react'
+import {useFormState, useFormStatus} from 'react-dom'
 import {MainButton} from '@/lib/components/buttons/main-button'
 import {authenticate} from '@/lib/actions'
-import React, {useActionState} from 'react'
 import {TextInput} from '@/lib/components/inputs/text-input'
 import {Checkbox} from '@/lib/components/inputs/checkbox'
 
 export default function LoginForm() {
-  const [errorMessage, dispatch] = useActionState(authenticate, undefined);
+  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
   return (
     <form action={dispatch} className="space-y-10">
