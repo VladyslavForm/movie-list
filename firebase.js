@@ -1,17 +1,17 @@
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage';
+import {initializeApp} from 'firebase/app'
+import {getStorage} from 'firebase/storage'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAaUMeVf6l0nikmNNbvtcgTKh3iEtYkMRc",
-  authDomain: "movie-list-56567.firebaseapp.com",
-  projectId: "movie-list-56567",
-  storageBucket: "movie-list-56567.firebasestorage.app",
-  messagingSenderId: "358470634082",
-  appId: "1:358470634082:web:e708c71087f808fb479f3b",
-  measurementId: "G-1RDL6BQQT9"
-};
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+}
 
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+const app = initializeApp(firebaseConfig)
+const storage = getStorage(app)
 
-export { storage };
+export {storage}
