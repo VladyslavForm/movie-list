@@ -5,7 +5,7 @@ import React from 'react'
 import {IconButton} from '@/lib/components/buttons/icon-button'
 import Link from 'next/link'
 import {fetchMovies} from '@/lib/data'
-import {LogoutButton} from '@/lib/components/buttons/logout-button'
+import {signOut} from '@/auth'
 
 export default async function Home() {
   const movies = await fetchMovies()
@@ -29,8 +29,14 @@ export default async function Home() {
                 <IconButton icon="/assets/images/circle-plus.svg" className="pt-2"/>
               </Link>
             </div>
-            <LogoutButton />
-            {/*<IconButton icon="/assets/images/logout.svg" label="Logout" onClick={() => signOut()}/>*/}
+            <form
+              action={async () => {
+                'use server';
+                await signOut();
+              }}
+            >
+              <IconButton icon="/assets/images/logout.svg" label="Logout" />
+            </form>
           </div>
           <div className="grid lg:grid-cols-4 grid-cols-2 gap-4">
             {movies.map(movie => {

@@ -13,8 +13,12 @@ export const authConfig = {
         nextUrl.pathname.startsWith(path),
       )
 
-      if (isProtected && !isLoggedIn) {
+      if (isProtected && !isLoggedIn && nextUrl.pathname !== '/login') {
         return Response.redirect(new URL('/login', nextUrl))
+      }
+
+      if (isLoggedIn && nextUrl.pathname === '/login') {
+        return Response.redirect(new URL('/', nextUrl))
       }
 
       return true
