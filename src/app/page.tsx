@@ -32,7 +32,7 @@ export default async function Home() {
             <form
               action={async () => {
                 'use server';
-                await signOut();
+                await signOut({callbackUrl: '/'});
               }}
             >
               <IconButton icon="/assets/images/logout.svg" label="Logout" />
