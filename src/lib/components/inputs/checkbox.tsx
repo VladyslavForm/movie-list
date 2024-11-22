@@ -1,15 +1,15 @@
-import React, { forwardRef, InputHTMLAttributes } from 'react';
+import React, {forwardRef, InputHTMLAttributes} from 'react'
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string | boolean;
-  isRequired?: boolean;
+  label?: string
+  error?: string | boolean
+  isRequired?: boolean
 }
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ id, className, label, error, isRequired, ...rest }, ref) => {
+  ({id, className, label, error, isRequired, ...rest}, ref) => {
     return (
-      <div className={`${className ?? ''} flex items-start relative`}>
+      <div className={`${className ?? ''} flex items-center justify-center relative`}>
         <input
           {...rest}
           ref={ref}
@@ -32,8 +32,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </div>
         )}
       </div>
-    );
+    )
   }
-);
+)
 
-Checkbox.displayName = 'Checkbox';
+Checkbox.displayName = 'Checkbox'

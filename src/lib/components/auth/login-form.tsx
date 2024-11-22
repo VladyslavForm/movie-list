@@ -14,7 +14,7 @@ export default function LoginForm() {
         <div className="w-full">
           <TextInput placeholder="Email" name="email" type="email" className="mb-6"/>
           <TextInput placeholder="Password" name="password" type="password" className="mb-6"/>
-          <Checkbox label="Remember me" name="rememberMe" className="mb-6"/>
+          <Checkbox label="Remember me" name="rememberMe" className="mb-6 mx-auto"/>
         </div>
         <LoginButton />
         <div
