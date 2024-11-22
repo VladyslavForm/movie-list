@@ -4,41 +4,13 @@ import {Card} from '@/lib/components/layout/card'
 import React from 'react'
 import {IconButton} from '@/lib/components/buttons/icon-button'
 import Link from 'next/link'
-
-const isEmpty = false
-
-const movies = [
-  {
-    "image": "https://via.placeholder.com/300x450",
-    "title": "The Shawshank Redemption",
-    "year": "1994"
-  },
-  {
-    "image": "https://via.placeholder.com/300x450",
-    "title": "The Godfather",
-    "year": "1972"
-  },
-  {
-    "image": "https://via.placeholder.com/300x450",
-    "title": "The Dark Knight",
-    "year": "2008"
-  },
-  {
-    "image": "https://via.placeholder.com/300x450",
-    "title": "Inception",
-    "year": "2010"
-  },
-  {
-    "image": "https://via.placeholder.com/300x450",
-    "title": "The Lord of the Rings: The Return of the King",
-    "year": "2003"
-  }
-]
-
+import {fetchMovies} from '@/lib/data'
 
 export default async function Home() {
+  const movies = await fetchMovies()
+
   return (
-    isEmpty
+    !movies.length
       ? (
         <div className="flex flex-col items-center justify-center p-8 pb-20 gap-10 sm:p-20">
           <Heading variant="2" text="Your movie list is empty"/>
@@ -48,7 +20,7 @@ export default async function Home() {
         </div>
       )
       : (
-        <div className="min-h-screen flex flex-col items-center justify-center py-8 pb-20 gap-10 sm:p-20">
+        <div className="min-h-screen flex flex-col py-8 pb-20 gap-32 sm:p-20">
           <div className="flex flex-row items-center justify-between gap-3 w-full">
             <div className="flex items-center">
               <Heading variant="2" text="My movies"/>
@@ -64,8 +36,9 @@ export default async function Home() {
                 <Card
                   image={movie.image}
                   title={movie.title}
-                  year={movie.year}
-                  key={movie.image + movie.title}
+                  year={movie.release_year}
+                  id={movie.id}
+                  key={movie.id}
                 />
               )
             })}

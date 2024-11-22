@@ -95,8 +95,8 @@ export async function updateMovie(id: string, prevState: State, formData: FormDa
     return { message: 'Database Error: Failed to Update Movie.' };
   }
 
-  revalidatePath('/dashboard/movies');
-  redirect('/dashboard/movies');
+  revalidatePath('/');
+  redirect('/');
 }
 
 export async function deleteMovie(id: string) {
