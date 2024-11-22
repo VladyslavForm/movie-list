@@ -3,7 +3,7 @@ import {MdEdit} from 'react-icons/md'
 import {Movie} from '@/lib/definitions'
 import Link from 'next/link'
 
-export const Card = ({image, title, year, id}: Movie) => {
+export const Card = ({image, title, release_year, id}: Movie) => {
   return (
     <div className="p-2 rounded-xl bg-card">
       <Image src={image} alt="" width={266} height={400} className="rounded-xl w-full h-[400px] object-cover"/>
@@ -14,7 +14,7 @@ export const Card = ({image, title, year, id}: Movie) => {
             <MdEdit className="w-5 h-5"/>
           </Link>
         </div>
-        <p>{year}</p>
+        <p>{release_year}</p>
       </div>
     </div>
   )

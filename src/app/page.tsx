@@ -44,7 +44,7 @@ export default async function Home() {
                 <Card
                   image={movie.image}
                   title={movie.title}
-                  year={movie.release_year}
+                  release_year={movie.release_year}
                   id={movie.id}
                   key={movie.id}
                 />

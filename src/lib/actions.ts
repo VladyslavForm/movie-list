@@ -10,10 +10,10 @@ import { AuthError } from 'next-auth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
 
-export async function uploadImageToFirebase(file) {
+export async function uploadImageToFirebase(file: File) {
   const storageRef = ref(storage, `movies/${file.name}`);
-  await uploadBytes(storageRef, file); // Upload the file
-  const url = await getDownloadURL(storageRef); // Get the download URL
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
   return url;
 }
 
