@@ -47,6 +47,7 @@ export const MovieForm: React.FC<MovieFormProps> = ({movie}) => {
       setErrorMessage(null)
       router.push('/')
     } catch (error) {
+      console.error(error)
       setErrorMessage(
         `Failed to ${movie ? 'update' : 'create'} movie. Please try again.`
       )

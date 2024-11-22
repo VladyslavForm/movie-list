@@ -60,6 +60,7 @@ export async function createMovie(prevState: State, formData: FormData) {
       VALUES (${title}, ${release_year}, ${image})
     `;
   } catch (error) {
+    console.error(error)
     return {
       message: 'Database Error: Failed to Create Movie.',
     };
@@ -92,6 +93,7 @@ export async function updateMovie(id: string, prevState: State, formData: FormDa
       WHERE id = ${id}
     `;
   } catch (error) {
+    console.error(error)
     return { message: 'Database Error: Failed to Update Movie.' };
   }
 
@@ -105,6 +107,7 @@ export async function deleteMovie(id: string) {
     revalidatePath('/');
     return { message: 'Deleted Movie.' };
   } catch (error) {
+    console.error(error)
     return { message: 'Database Error: Failed to Delete Movie.' };
   }
 }
