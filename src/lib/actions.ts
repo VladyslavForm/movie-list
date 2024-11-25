@@ -75,19 +75,14 @@ export async function saveMovieToDbAction(formData: FormData) {
 }
 
 export async function updateMovie(id: string, formData: FormData) {
-  console.log('id', id)
-  console.log('formData', formData)
-
   let imageUrl = ''
 
   const imageValue = formData.get('image')
 
   if (imageValue instanceof File && imageValue.size > 0) {
-    console.log('Uploading new image...')
     imageUrl = await uploadImageToSupabase(imageValue)
     formData.set('image', imageUrl)
   } else if (typeof imageValue === 'string') {
-    console.log('Using existing image URL...')
     imageUrl = imageValue
   } else {
     console.log('Fetching current image URL from database...')
@@ -102,15 +97,11 @@ export async function updateMovie(id: string, formData: FormData) {
     }
   }
 
-  console.log('Updated formData:', formData)
-
   const validatedFields = UpdateMovie.safeParse({
     title: formData.get('title'),
     release_year: formData.get('release_year'),
     image: formData.get('image'),
   })
-
-  console.log('validatedFields', validatedFields)
 
   if (!validatedFields.success) {
     console.error('Validation failed:', validatedFields.error)
@@ -121,8 +112,6 @@ export async function updateMovie(id: string, formData: FormData) {
   }
 
   const {title, release_year, image} = validatedFields.data
-
-  console.log('title, release_year, image', title, release_year, image)
 
   try {
     await sql`
@@ -137,51 +126,9 @@ export async function updateMovie(id: string, formData: FormData) {
     return {message: 'Database Error: Failed to Update Movie.'}
   }
 
-  console.log('after try catch')
-
   revalidatePath('/')
   redirect('/')
 }
-
-// export async function updateMovie(id: string, formData: FormData) {
-//   console.log('id', id)
-//   console.log('formData', formData)
-//
-//   const validatedFields = UpdateMovie.safeParse({
-//     title: formData.get('title'),
-//     release_year: formData.get('release_year'),
-//     image: formData.get('image'),
-//   });
-//
-//   console.log('validatedFields', validatedFields)
-//
-//   if (!validatedFields.success) {
-//     return {
-//       errors: validatedFields.error.flatten().fieldErrors,
-//       message: 'Missing Fields. Failed to Update Movie.',
-//     };
-//   }
-//
-//   const { title, release_year, image } = validatedFields.data;
-//
-//   console.log('title, release_year, image', title, release_year, image)
-//
-//   try {
-//     await sql`
-//       UPDATE movies
-//       SET title = ${title}, release_year = ${release_year}, image = ${image}
-//       WHERE id = ${id}
-//     `;
-//   } catch (error) {
-//     console.error(error)
-//     return { message: 'Database Error: Failed to Update Movie.' };
-//   }
-//
-//   console.log('after try catch')
-//
-//   revalidatePath('/');
-//   redirect('/');
-// }
 
 export async function deleteMovie(id: string) {
   try {
