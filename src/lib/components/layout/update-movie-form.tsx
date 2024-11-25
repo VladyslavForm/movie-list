@@ -14,6 +14,7 @@ interface MovieFormProps {
 export const UpdateMovieForm: React.FC<MovieFormProps> = ({movie}) => {
   const [title, setTitle] = useState(movie.title || '')
   const [releaseYear, setReleaseYear] = useState(movie.release_year || '')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()

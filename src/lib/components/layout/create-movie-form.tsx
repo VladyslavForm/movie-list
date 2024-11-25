@@ -9,6 +9,7 @@ import {useRouter} from 'next/navigation'
 export const CreateMovieForm = () => {
   const [title, setTitle] = useState('')
   const [releaseYear, setReleaseYear] = useState('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()

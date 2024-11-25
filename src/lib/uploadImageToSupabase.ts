@@ -5,7 +5,7 @@ export async function uploadImageToSupabase(file: File): Promise<string> {
   const fileName = `${Date.now()}.${fileExt}`
   const filePath = `${fileName}`
 
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('movies')
     .upload(filePath, file)
 
