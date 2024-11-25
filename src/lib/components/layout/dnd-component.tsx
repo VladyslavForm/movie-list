@@ -59,6 +59,7 @@ const DragNdrop: React.FC<DragNdropProps> = ({ onFilesSelected, width, height })
           </div>
           <input
             type="file"
+            name="image"
             hidden
             id="browse"
             onChange={handleFileChange}

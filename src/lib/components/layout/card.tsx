@@ -2,6 +2,7 @@ import Image from 'next/image'
 import {MdEdit} from 'react-icons/md'
 import {Movie} from '@/lib/definitions'
 import Link from 'next/link'
+import {DeleteMovieButton} from '@/lib/components/buttons/delete-movie'
 
 export const Card = ({image, title, release_year, id}: Movie) => {
   return (
@@ -14,7 +15,10 @@ export const Card = ({image, title, release_year, id}: Movie) => {
             <MdEdit className="w-5 h-5"/>
           </Link>
         </div>
-        <p>{release_year}</p>
+        <div className="flex justify-between items-center">
+          <p>{release_year}</p>
+          <DeleteMovieButton id={id} />
+        </div>
       </div>
     </div>
   )
