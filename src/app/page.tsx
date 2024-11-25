@@ -15,9 +15,11 @@ export default async function Home() {
       ? (
         <div className="flex flex-col items-center justify-center p-8 pb-20 gap-10 sm:p-20">
           <Heading variant="2" text="Your movie list is empty"/>
-          <MainButton>
-            Add a new movie
-          </MainButton>
+          <Link href='create-movie'>
+            <MainButton>
+              Add a new movie
+            </MainButton>
+          </Link>
         </div>
       )
       : (

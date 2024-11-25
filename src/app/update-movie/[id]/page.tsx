@@ -8,7 +8,7 @@ export default async function UpdateMovie({params}: { params: { id: string } }) 
   const movie = await fetchMovieById(id)
 
   return (
-    <div className="min-h-screen flex flex-col py-8 pb-20 gap-32 sm:p-20">
+    <div className="min-h-screen flex flex-col py-8 pb-20 gap-20 md:gap-32 sm:p-20">
       <Heading variant="2" text={`Edit ${movie.title}`}/>
       <UpdateMovieForm movie={{
         id,

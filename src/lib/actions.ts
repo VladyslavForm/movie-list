@@ -29,50 +29,51 @@ export type State = {
   message?: string | null;
 };
 
-export async function createMovieAction(formData: FormData) {
+export async function createMovieAction(prevState: State, formData: FormData) {
   try {
     const imageFile = formData.get('image')
-    const imageUrl = await uploadImageToSupabase(imageFile as File)
+    if (!(imageFile instanceof File) || imageFile.size === 0) {
+      return {
+        errors: {image: ['Please provide an image.']},
+        message: 'Validation failed. Failed to create movie.',
+      }
+    }
 
+    const imageUrl = await uploadImageToSupabase(imageFile)
     formData.set('image', imageUrl)
-    await saveMovieToDbAction(formData)
 
+    const validatedFields = CreateMovie.safeParse({
+      title: formData.get('title'),
+      release_year: formData.get('release_year'),
+      image: formData.get('image'),
+    })
+
+    if (!validatedFields.success) {
+      console.error('Validation failed:', validatedFields.error)
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+        message: 'Validation failed. Failed to create movie.',
+      }
+    }
+
+    const {title, release_year, image} = validatedFields.data
+
+    await sql`
+        INSERT INTO movies (title, release_year, image)
+        VALUES (${title}, ${release_year}, ${image})
+    `
   } catch (error) {
-    console.error(error)
+    console.error('Error in createMovieAction:', error)
+    return {
+      message: 'An unexpected error occurred.',
+    }
   }
 
   revalidatePath('/')
   redirect('/')
 }
 
-export async function saveMovieToDbAction(formData: FormData) {
-  const validatedFields = CreateMovie.safeParse({
-    title: formData.get('title'),
-    release_year: formData.get('release_year'),
-    image: formData.get('image'),
-  })
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Create Movie.',
-    }
-  }
-
-  const {title, release_year, image} = validatedFields.data
-
-  try {
-    await sql`
-        INSERT INTO movies (title, release_year, image)
-        VALUES (${title}, ${release_year}, ${image})
-    `
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
-}
-
-export async function updateMovie(id: string, formData: FormData) {
+export async function updateMovie(id: string, prevState: State, formData: FormData) {
   let imageUrl = ''
 
   const imageValue = formData.get('image')

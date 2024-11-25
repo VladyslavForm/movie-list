@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react"
-import { MdClear } from "react-icons/md"
-import Image from "next/image"
+import React, {useEffect, useState} from 'react'
+import {MdClear} from 'react-icons/md'
+import Image from 'next/image'
 
 interface DragNdropProps {
   onFilesSelected: (file: File | null) => void
-  width?: string | number
-  height?: string | number
 }
 
-const DragNdrop: React.FC<DragNdropProps> = ({ onFilesSelected, width, height }) => {
+const DragNdrop: React.FC<DragNdropProps> = ({onFilesSelected}) => {
   const [file, setFile] = useState<File | null>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,10 +35,9 @@ const DragNdrop: React.FC<DragNdropProps> = ({ onFilesSelected, width, height })
   return (
     <section className="rounded-lg">
       <div
-        className={`flex flex-col items-center justify-center border-2 border-dashed bg-input p-4 relative rounded-lg cursor-pointer ${
-          file ? "border-white" : "border-gray-400"
+        className={`flex flex-col items-center justify-center border-2 border-dashed bg-input p-4 relative rounded-lg cursor-pointer h-96 min-w-[300px] lg:min-w-[470px] ${
+          file ? 'border-white' : 'border-gray-400'
         }`}
-        style={{ width: width, height: height }}
         onDrop={handleDrop}
         onDragOver={(event) => event.preventDefault()}
       >
@@ -83,7 +80,7 @@ const DragNdrop: React.FC<DragNdropProps> = ({ onFilesSelected, width, height })
                 className="cursor-pointer hover:text-red-500"
                 onClick={handleRemoveFile}
               >
-                <MdClear />
+                <MdClear/>
               </div>
             </div>
           </div>
