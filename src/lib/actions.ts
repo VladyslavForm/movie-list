@@ -30,11 +30,9 @@ export type State = {
 };
 
 export async function createMovieAction(formData: FormData) {
-  // todo add validation for all 3 fields
-
   try {
     const imageFile = formData.get('image')
-    const imageUrl = await uploadImageToSupabase(imageFile)
+    const imageUrl = await uploadImageToSupabase(imageFile as File)
 
     formData.set('image', imageUrl)
     await saveMovieToDbAction(formData)
